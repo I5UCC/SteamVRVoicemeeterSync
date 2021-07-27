@@ -24,34 +24,6 @@ Loop {
         Sleep, 300
     }
     voicemeeter.cmd("RESET")
-    Soundset, 100
-}
-
-;Methods
-notImpl() {
-    ;MsgBox, 64, NOT IMPLEMENTED, NOT IMPLEMENTED, 5
-}
-
-MessageBox(Message, Timeout) {
-    MsgBox, 4097,, %Message%, %Timeout%
-    IfMsgBox, Cancel
-        Return False
-    Return True
-}
-
-CMD(cmd, dir, bhide := False, wait := False) {
-    If dir not contains :
-        dir = %A_ScriptDir%%dir%
-    
-    If (!wait && !bhide)
-        Run, %ComSpec% /c %cmd%, %dir%, Show
-    Else If (wait && !bhide)
-        RunWait, %ComSpec% /c %cmd%, %dir%, Show
-    Else If (!wait && bhide)
-        Run, %ComSpec% /c %cmd%, %dir%, Hide
-    Else If (wait && bhide)
-        RunWait, %ComSpec% /c %cmd%, %dir%, Hide
-    
 }
 
 ;Classes
