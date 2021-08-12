@@ -1,6 +1,6 @@
-﻿#SingleInstance ignore
+#SingleInstance ignore
 #Persistent
-;#NoTrayIcon
+#NoTrayIcon
 #NoEnv
 SetWorkingDir %A_ScriptDir%
 SendMode Input
@@ -12,6 +12,8 @@ voicemeeter := new Voicemeeter()
 Loop {
     WinWait, SteamVR Status
     voicemeeter.cmd("VR")
+    Sleep, 2000
+    SoundSet, 70
 
     While (WinExist("SteamVR Status")) {
         SoundGet, master_volume
