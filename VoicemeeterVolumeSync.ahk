@@ -15,7 +15,7 @@ Loop {
     Sleep, 2000
     SoundSet, 70
 
-    While (WinExist("SteamVR Status")) {
+    While (ProcessExist("vrmonitor.exe")) {
         SoundGet, master_volume
 
         if (master_volume != lastVolume) {
@@ -26,6 +26,12 @@ Loop {
         Sleep, 300
     }
     voicemeeter.cmd("RESET")
+    Sleep 20000
+}
+
+ProcessExist(Name){
+	Process,Exist,%Name%
+	return Errorlevel
 }
 
 ;Classes
