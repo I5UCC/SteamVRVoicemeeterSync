@@ -7,11 +7,23 @@ SendMode Input
 #Include VMR.ahk/VMR.ahk
 
 global voicemeeter
+global state
+
+global OUTPUT_1 := 6
+global OUTPUT_2 := 7
+global OUTPUT_3 := 8
+global VOLUME_CHANGE_AMOUNT := 0.5
+global DEFAULT_VOLUME := -20
+
 voicemeeter := new Voicemeeter()
 
 Loop {
     WinWait, SteamVR Status
-    voicemeeter.cmd("VR")
+    voicemeeter.setMainOutput("A4", True)
+    voicemeeter.volumeMute(1, 1)
+    voicemeeter.volumeMute(2, 0)
+    voicemeeter.restart()
+
     Sleep, 2000
     SoundSet, 70
 
@@ -25,7 +37,7 @@ Loop {
         }
         Sleep, 300
     }
-    voicemeeter.cmd("RESET")
+    voicemeeter.reset()
     Sleep 20000
 }
 
@@ -34,7 +46,6 @@ ProcessExist(Name){
 	return Errorlevel
 }
 
-;Classes
 Class Voicemeeter {
     vm := ""
     
@@ -43,41 +54,36 @@ Class Voicemeeter {
         this.vm.login()
     }
 
-    cmd(macrolabel) {
-        switch macrolabel {
-            case "RESET":
-                this.setMainOutput("A1", True)
-
-                this.vm.strip[1].Color_x := -0.26
-                this.vm.strip[2].Color_x := -0.26
-
-                this.vm.strip[6].gain := -20
-                this.vm.strip[7].gain := -20
-                this.vm.strip[8].gain := -20
-
-                this.vm.strip[1].mute := 0
-                this.vm.strip[2].mute := 1
-                this.vm.command.restart()
-
-            Return
-            case "VR":
-                this.setMainOutput("A4", True)
-
-                this.vm.strip[1].mute := 1
-                this.vm.strip[2].mute := 0
-
-                this.vm.command.restart()
-            Return
-        }
+    volumeUp(strip) {
+        this.vm.strip[strip].gain += VOLUME_CHANGE_AMOUNT
     }
 
-    setVolumes(vol) {
-        this.vm.strip[6].gain := vol
-        this.vm.strip[7].gain := vol
-        this.vm.strip[8].gain := vol
+    volumeDown(strip) {
+        this.vm.strip[strip].gain -= VOLUME_CHANGE_AMOUNT
+    }
+
+    volumeMute(strip, v = -1) {
+        if (v != -1)
+            this.vm.strip[strip].mute := v
+        Else
+            this.vm.strip[strip].mute--
     }
     
-    setMainOutput(output, unmute := False) {
+    setMainOutput(output, unmute := True) {
+        switch output {
+            case "A2": 
+                If (this.vm.strip[OUTPUT_1].A2)
+                    output := "A1"
+            case "A3":
+                If (this.vm.strip[OUTPUT_1].A3)
+                    output := "A1"
+            case "A4":
+                If (this.vm.strip[OUTPUT_1].A4)
+                    output := "A1"
+            case "A5":
+                If (this.vm.strip[OUTPUT_1].A5)
+                    output := "A1"
+        }
         for i, strip in this.vm.strip {
             If (i > 5) {
                 strip.A1 := 0
@@ -96,5 +102,23 @@ Class Voicemeeter {
             If (unmute)
                 strip.mute := 0
         }
+    }
+
+    restart() {
+        voicemeeter.vm.command.restart()
+    }
+
+    reset() {
+        this.setMainOutput("A1")
+
+        this.vm.strip[OUTPUT_1].gain := DEFAULT_VOLUME
+        this.vm.strip[OUTPUT_2].gain := DEFAULT_VOLUME
+        this.vm.strip[OUTPUT_3].gain := DEFAULT_VOLUME
+
+        for i, strip in this.vm.strip {
+            strip.mute := 0
+        }
+
+        this.restart()
     }
 }
