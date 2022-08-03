@@ -15,10 +15,18 @@ global OUTPUT_3 := 8
 global VOLUME_CHANGE_AMOUNT := 0.5
 global DEFAULT_VOLUME := -20
 
+global running := 0
+
 voicemeeter := new Voicemeeter()
 
 Loop {
-    WinWait, SteamVR Status
+    While (!running) {
+        If (ProcessExist("vrmonitor.exe"))
+            running := 1
+        Else
+            Sleep, 3000
+    }
+    MsgBox, test
     voicemeeter.setMainOutput("A4", True)
     voicemeeter.volumeMute(1, 1)
     voicemeeter.volumeMute(2, 0)
@@ -38,7 +46,7 @@ Loop {
         Sleep, 300
     }
     voicemeeter.reset()
-    Sleep 20000
+    running := 0
 }
 
 ProcessExist(Name){
