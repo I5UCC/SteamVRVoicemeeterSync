@@ -13,7 +13,12 @@ global OUTPUT_1 := 6
 global OUTPUT_2 := 7
 global OUTPUT_3 := 8
 global VOLUME_CHANGE_AMOUNT := 0.5
-global DEFAULT_VOLUME := -20
+global DEFAULT_VOLUME_1 := -25
+global DEFAULT_VOLUME_2 := -20
+global DEFAULT_VOLUME_3 := -10
+global OFFSET_1 := -5
+global OFFSET_2 := -10
+global OFFSET_3 := 0
 
 global running := 0
 
@@ -32,7 +37,11 @@ Loop {
     voicemeeter.restart()
 
     Sleep, 5000
-    SoundSet, 70
+    
+    While (master_volume != 70) {
+        SoundGet, master_volume
+        SoundSet, 70
+    }
 
     While (ProcessExist("vrmonitor.exe")) {
         SoundGet, master_volume
@@ -74,6 +83,12 @@ Class Voicemeeter {
             this.vm.strip[strip].mute := v
         Else
             this.vm.strip[strip].mute--
+    }
+
+    setVolumes(vol) {
+        this.vm.strip[OUTPUT_1].gain := OFFSET_1 + vol
+        this.vm.strip[OUTPUT_2].gain := OFFSET_2 + vol
+        this.vm.strip[OUTPUT_3].gain := OFFSET_3 + vol
     }
     
     setMainOutput(output, unmute := True) {
@@ -118,9 +133,9 @@ Class Voicemeeter {
     reset() {
         this.setMainOutput("A1")
 
-        this.vm.strip[OUTPUT_1].gain := DEFAULT_VOLUME
-        this.vm.strip[OUTPUT_2].gain := DEFAULT_VOLUME
-        this.vm.strip[OUTPUT_3].gain := DEFAULT_VOLUME
+        this.vm.strip[OUTPUT_1].gain := DEFAULT_VOLUME_1
+        this.vm.strip[OUTPUT_2].gain := DEFAULT_VOLUME_2
+        this.vm.strip[OUTPUT_3].gain := DEFAULT_VOLUME_3
 
         for i, strip in this.vm.strip {
             strip.mute := 0
