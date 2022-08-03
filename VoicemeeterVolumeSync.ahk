@@ -24,15 +24,14 @@ Loop {
         If (ProcessExist("vrmonitor.exe"))
             running := 1
         Else
-            Sleep, 3000
+            Sleep, 5000
     }
-    MsgBox, test
     voicemeeter.setMainOutput("A4", True)
     voicemeeter.volumeMute(1, 1)
     voicemeeter.volumeMute(2, 0)
     voicemeeter.restart()
 
-    Sleep, 2000
+    Sleep, 5000
     SoundSet, 70
 
     While (ProcessExist("vrmonitor.exe")) {
@@ -43,7 +42,7 @@ Loop {
             voicemeeter.setVolumes(VMVolume)
             lastVolume := master_volume
         }
-        Sleep, 300
+        Sleep, 1000
     }
     voicemeeter.reset()
     running := 0
