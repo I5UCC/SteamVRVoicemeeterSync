@@ -24,6 +24,8 @@ global running := 0
 
 voicemeeter := new Voicemeeter()
 
+
+SoundSet, 70
 Loop {
     While (!running) {
         If (ProcessExist("vrmonitor.exe"))
