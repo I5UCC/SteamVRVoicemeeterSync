@@ -33,9 +33,9 @@ voicemeeter := new Voicemeeter()
 voicemeeter.loadConfig(VRConfigPath, PathIsRelative)
 
 Sleep, 2000
-While (master_volume != 70) {
+While (master_volume != 80) {
     SoundGet, master_volume
-    SoundSet, 70, master
+    SoundSet, 80, master
 }
 Sleep, 5000
 
