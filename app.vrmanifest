@@ -9,7 +9,7 @@
 
 			"strings": {
 				"en_us": {
-					"name": "SteamVRVoicemeeterSync",
+					"name": "VoicemeeterSync",
 					"description": "Syncs Windows Sound with Voicemeeter Potato."
 				}
 			}
